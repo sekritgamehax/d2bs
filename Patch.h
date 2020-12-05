@@ -6,9 +6,9 @@
 #include "D2BS.h"
 
 PatchHook Patches[] = {
-    {PatchCall, GetDllOffset("D2Client.dll", 0x7C89D), (DWORD)GameInput_Intercept, 5},          // Updated 1.14d //0047C89D-BASE
-    {PatchJmp, GetDllOffset("D2Client.dll", 0x53B30), (DWORD)GameDraw_Intercept, 5},            // Updated 1.14d //00453B30-BASE
-    {PatchCall, GetDllOffset("D2Client.dll", 0x5F802), (DWORD)GamePacketReceived_Intercept, 5}, // Updated 1.14d //0045F802-BASE
+    {PatchCall, GetDllOffset("D2Client.dll", 0x70B75), (DWORD)GameInput_Intercept, 5},          // 1.13c from BH - BH.cpp line 38
+    {PatchJmp, GetDllOffset("D2Client.dll", 0xC3DB4), (DWORD)GameDraw_Intercept, 5},            // 1.13c from BH - BH.cpp line 32
+    {PatchCall, GetDllOffset("D2Client.dll", 0xACE61), (DWORD)GamePacketReceived_Intercept, 5}, // 1.13c from BH - BH.cpp line 37
     {PatchJmp, GetDllOffset("D2Client.dll", 0x12AE5A), (DWORD)GamePacketSent_Interception, 5},  // Updated 1.14d //0052AE5A-BASE
     {PatchCall, GetDllOffset("D2Client.dll", 0x62D72), (DWORD)GetSelectedUnit_Intercept, 5},    // Updated 1.14d //00462D72-BASE
     {PatchJmp, GetDllOffset("D2Client.dll", 0x5E4D5), (DWORD)PlayerAssignment_Intercept, 5},    // Updated 1.14d //0045E4D5-BASE
@@ -23,20 +23,20 @@ PatchHook Patches[] = {
     //	{PatchCall,	GetDllOffset("D2Client.dll", 0xA6F25),	(DWORD)RemoveUnit_Interept,			9},
 
     // this patch needs a constant in ChatPacketRecv_Interception updated also
-    {PatchCall, GetDllOffset("BNCLIENT.DLL", 0x121B20), (DWORD)ChatPacketRecv_Interception, 7}, // Updated 1.14d //00521B20-BASE
+    {PatchCall, GetDllOffset("BNCLIENT.DLL", 0xEAB6), (DWORD)ChatPacketRecv_Interception, 0xEABE - 0xEAB6}, // patch 1.13c from BH - BH.cpp line 35
 
-    {PatchCall, GetDllOffset("D2Multi.dll", 0x48813), (DWORD)Whisper_Intercept, 7},      // Updated 1.14d //00448813-BASE
-    {PatchCall, GetDllOffset("D2Multi.dll", 0x42A61), (DWORD)ChannelInput_Intercept, 5}, // Updated 1.14d //00442A61-BASE
+    {PatchCall, GetDllOffset("D2Multi.dll", 0x10781), (DWORD)Whisper_Intercept, 7},     // 1.13c from BH - BH.cpp line 40
+    {PatchCall, GetDllOffset("D2Multi.dll", 0xD753), (DWORD)ChannelInput_Intercept, 5}, // 1.13c from BH - BH.cpp line 39
 
     //{PatchCall,	GetDllOffset("D2Multi.dll", 0x14A9A),	(DWORD)ChannelWhisper_Intercept,		5},//1.13d //not used
-    //{PatchJmp,	GetDllOffset("D2Multi.dll", 0x14BE0),	(DWORD)ChannelChat_Intercept,			6},//1.13d
+    //{PatchJmp,	GetDllOffset("D2Multi.dll", 0x108A0),	(DWORD)ChannelChat_Intercept,			6},// 1.13c from BH - BH.cpp line 39
     //{PatchJmp,	GetDllOffset("D2Multi.dll", 0x14850),	(DWORD)ChannelEmote_Intercept,			6},//1.13d
 
     {PatchCall, GetDllOffset("D2Win.dll", 0xF9A0D), (DWORD)GameDrawOOG_Intercept, 5}, // Updated 1.14d //004F9A0D-BASE
 
     {PatchCall, GetDllOffset("D2CMP.dll", 0x2091E5), (DWORD)GameCrashFix_Intercept, 10}, // 1.14d //006091E5-BASE
 
-    {PatchCall, GetDllOffset("D2MCPClient.dll", 0x4B1AE), (DWORD)RealmPacketRecv_Interception, 6},
+    {PatchCall, GetDllOffset("D2MCPClient.dll", 0x69D7), (DWORD)RealmPacketRecv_Interception, 5}, // 1.13c from BH - BH.cpp line 36
 
     {PatchCall, GetDllOffset("Fog.dll", 0x8CC4), (DWORD)LogMessageBoxA_Intercept, 6}, // Updated 1.14d //00408CC4-BASE
     {PatchJmp, GetDllOffset("Fog.dll", 0x82E0), (DWORD)D2GAME_exit0, 6},              // NEW 1.14d //004082E0-BASE
