@@ -23,6 +23,7 @@ static HANDLE hEventThread = INVALID_HANDLE_VALUE;
 BOOL WINAPI DllMain(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved) {
     switch (dwReason) {
     case DLL_PROCESS_ATTACH: {
+		OutputDebugStringW(L"DLL_PROCESS_ATTACH");
         DisableThreadLibraryCalls(hDll);
         if (lpReserved != NULL) {
             Vars.pModule = (Module*)lpReserved;
@@ -41,6 +42,7 @@ BOOL WINAPI DllMain(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved) {
         }
 
         InitCommandLine();
+		OutputDebugStringW(L"InitCommandLine");
         ParseCommandLine(Vars.szCommandLine);
         sLine* command = NULL;
         Vars.bUseRawCDKey = FALSE;
@@ -75,7 +77,7 @@ BOOL WINAPI DllMain(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved) {
             delete[] keys;
         }
 
-#if 0
+#if 1
 		char errlog[516] = "";
 		sprintf_s(errlog, 516, "%sd2bs.log", Vars.szPath);
 		AllocConsole();
@@ -103,6 +105,7 @@ BOOL WINAPI DllMain(HINSTANCE hDll, DWORD dwReason, LPVOID lpReserved) {
 }
 
 BOOL Startup(void) {
+	OutputDebugStringW(L"Startup");
     InitializeCriticalSection(&Vars.cEventSection);
     InitializeCriticalSection(&Vars.cRoomSection);
     InitializeCriticalSection(&Vars.cMiscSection);
@@ -125,10 +128,14 @@ BOOL Startup(void) {
     Vars.SectionCount = 0;
 
     // MessageBox(NULL, "qwe", "qwe", MB_OK);
+	OutputDebugStringW(L"GenHook");
     Genhook::Initialize();
+	OutputDebugStringW(L"Defining Offsets...");
     DefineOffsets();
+	OutputDebugStringW(L"Installing Patches...");
     InstallPatches();
-    InstallConditional();
+    //InstallConditional();
+	OutputDebugStringW(L"Creating DDE Server...");
     CreateDdeServer();
 
     if ((hD2Thread = CreateThread(NULL, NULL, D2Thread, NULL, NULL, NULL)) == NULL)

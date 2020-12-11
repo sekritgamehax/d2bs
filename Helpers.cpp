@@ -366,7 +366,7 @@ IMAGEHLP_LINE64* GetLineFromAddr(HANDLE hProcess, DWORD64 addr) {
 
 char* DllLoadAddrStrs() {
     const char* dlls[] = {"D2Client.DLL", "D2Common.DLL", "D2Gfx.DLL",    "D2Lang.DLL", "D2Win.DLL", "D2Net.DLL",  "D2Game.DLL",
-                          "D2Launch.DLL", "Fog.DLL",      "BNClient.DLL", "Storm.DLL",  "D2Cmp.DLL", "D2Multi.DLL"};
+                          "D2Launch.DLL", "BNClient.DLL", "Storm.DLL",  "D2Cmp.DLL", "D2Multi.DLL"};
     size_t strMaxLen;
     char* result;
     char lineBuf[80];
