@@ -127,7 +127,7 @@ BOOL Startup(void) {
     Vars.bGameLoopEntered = FALSE;
     Vars.SectionCount = 0;
 
-    // MessageBox(NULL, "qwe", "qwe", MB_OK);
+    MessageBox(NULL, "qwe", "qwe", MB_OK);
 	OutputDebugStringW(L"GenHook");
     Genhook::Initialize();
 	OutputDebugStringW(L"Defining Offsets...");
@@ -137,6 +137,9 @@ BOOL Startup(void) {
     //InstallConditional();
 	OutputDebugStringW(L"Creating DDE Server...");
     CreateDdeServer();
+	char msgbuf[256];
+	sprintf(msgbuf, "GetLastErrror: %ld\n", GetLastError());
+	OutputDebugString(msgbuf);
 
     if ((hD2Thread = CreateThread(NULL, NULL, D2Thread, NULL, NULL, NULL)) == NULL)
         return FALSE;
@@ -145,6 +148,7 @@ BOOL Startup(void) {
 }
 
 void Shutdown(void) {
+	OutputDebugStringW(L"Shutting down... :(");
     if (!Vars.bNeedShutdown)
         return;
 
@@ -180,4 +184,5 @@ void Shutdown(void) {
 
     Log(L"D2BS Shutdown complete.");
     Vars.bNeedShutdown = false;
+	OutputDebugStringW(L"Shut down finished...");
 }

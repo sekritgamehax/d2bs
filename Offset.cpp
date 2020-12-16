@@ -27,22 +27,35 @@ void MyTraceImpl(int line, const char *fileName, const char *msg, ...)
 }
 
 void DefineOffsets() {
+	//MY_TRACE("d2ptrs_list is %s", d2ptrs_list[0]);
     DWORD** p = (DWORD**)d2ptrs_list;
     do {
         **p = GetDllOffset(**p);
     } while (ptrdiff_t(++p) < ((ptrdiff_t)d2ptrs_list) + sizeof(d2ptrs_list));
+	//MY_TRACE("d2ptrs is finished");
 }
 
 DWORD GetDllOffset(char* DllName, int Offset) {
-    HMODULE hMod = GetModuleHandle(NULL);
-	MY_TRACE("GetDllOffset: Offset is 0x%x\n", Offset);
-	if (Offset == NULL){
-		OutputDebugStringW(L"Offset is NULL");	
-		return NULL;
-	}
+    
+	if (Offset == NULL)
+		//OutputDebugStringW(L"Offset is NULL");
+		return 0;
+	
+	HMODULE hMod = GetModuleHandle(DllName);
+	MY_TRACE("GetLastErrror: %ld\n", GetLastError());
+	MY_TRACE("Module %s: Raw Offset is %d\n", DllName, Offset);
 
-    if (Offset < 0)
+	if (hMod)
+		MY_TRACE("Module %s: Calculated Offset is 0x%x\n", DllName,((DWORD)hMod) + Offset);
+
+	if (Offset < 0)
         return (DWORD)GetProcAddress(hMod, (LPCSTR)(-Offset));
+	
+	if(!hMod)
+		hMod = LoadLibrary(DllName);
+
+	if(!hMod)
+		return 0;
 
     return ((DWORD)hMod) + Offset;
 }
@@ -50,7 +63,7 @@ DWORD GetDllOffset(char* DllName, int Offset) {
 DWORD GetDllOffset(int num) {
     static char* dlls[] = {"D2Client.DLL", "D2Common.DLL", "D2Gfx.DLL",    "D2Lang.DLL", "D2Win.DLL", "D2Net.DLL",  "D2Game.DLL",
                            "D2Launch.DLL", "BNClient.DLL", "Storm.DLL",  "D2Cmp.DLL", "D2Multi.DLL"};
-	MY_TRACE("GetDllOffset2: num is 0x%x");
+
     if ((num & 0xff) > 12)
         return 0;
     return GetDllOffset(dlls[num & 0xff], num >> 8);
@@ -59,13 +72,14 @@ DWORD GetDllOffset(int num) {
 void InstallPatches() {
     for (int x = 0; x < ArraySize(Patches); x++) {
 			if (Patches[x].dwAddr == NULL){
-				MY_TRACE("Offset Address is 0x%x. Skipping Patch because of NULL value.", Patches[x].dwAddr);
+				//MY_TRACE("Offset Address is 0x%x. Skipping Patch because of NULL value.", Patches[x].dwAddr);
 			}
 			else{
-				MY_TRACE("Offset is 0x%x. Patching now.",  Patches[x].dwAddr, Patches[x].dwFunc);
+				//MY_TRACE("Offset is 0x%x. Patching now.",  Patches[x].dwAddr, Patches[x].dwFunc);
 				Patches[x].bOldCode = new BYTE[Patches[x].dwLen];
 				::ReadProcessMemory(GetCurrentProcess(), (void*)Patches[x].dwAddr, Patches[x].bOldCode, Patches[x].dwLen, NULL);
 				Patches[x].pFunc(Patches[x].dwAddr, Patches[x].dwFunc, Patches[x].dwLen);
+				MY_TRACE("GetLastError: %ld", GetLastError());
 			}
     }
 }
